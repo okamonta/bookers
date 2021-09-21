@@ -5,7 +5,8 @@ class BooksController < ApplicationController
   end
 
   def index
-    @books = Book.all.order(created_at: :desc)
+    @books = Book.all
+    # order(created_at: :desc)
     # indexで新規投稿があるためnewアクションがいらない。indexアクションにインスタンス変数を定義する。（メンターさん）
     @book = Book.new
   end
@@ -30,8 +31,8 @@ class BooksController < ApplicationController
   end
   
   def update
-    book = Book.find(params[:id])
-    if book.update(book_params)
+    @book = Book.find(params[:id])
+    if @book.update(book_params)
       flash[:notice] = "Book was successfully updated."
       redirect_to book_path
     else
@@ -45,9 +46,11 @@ class BooksController < ApplicationController
     
   
   def destroy
-    book = Book.find(params[:id])
-    book.destroy
-    redirect_to books_path
+    @book = Book.find(params[:id])
+    if @book.destroy
+      flash[:notice] = "Book was successfully destroyed."
+      redirect_to books_path
+    end
   end
   
   private
